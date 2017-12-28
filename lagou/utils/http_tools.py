@@ -1,0 +1,47 @@
+# coding=utf-8
+import re
+import random
+import logging
+
+import requests
+from lxml import etree
+
+from common import constants
+from lagou.common_s import constants as constants_s
+
+def filter_http_tag(string):
+    """过滤网页端的多余字符和标签"""
+    pattern = r'<br/?>|\n'
+    replace_char = ''
+    string = re.sub(pattern=pattern, repl=replace_char, string=string)
+    return string.strip()
+
+
+def generate_http_header(is_crawl_jobs_count=False):
+    """构造 HTTP 请求头"""
+    header = constants_s.HTTP_HEADER
+    header['User-Agent'] = random.choice(constants.USER_AGENT_LIST)
+    # lagou 会针对访问的不同链接 检测header 的referer
+    if is_crawl_jobs_count:
+        header['Referer'] = 'https://www.lagou.com/jobs/list_python?labelWords=&fromSearch=true&suginput='
+    return header
+
+
+def filter_unavailable_proxy(proxy_list, proxy_type='HTTPS'):
+    """过滤掉无用的代理"""
+    available_proxy_list = []
+    for proxy in proxy_list:
+        if proxy_type == 'HTTPS':
+            protocol = 'https'
+        else:
+            protocol = 'http'
+        try:
+            response = requests.get('https://www.lagou.com/gongsi/0-0-0.json',
+                                    proxies={protocol: proxy},
+                                    timeout=1)
+            if response.status_code == constants.HTTP_SUCCESS and 'totalCount' in response.json():
+                available_proxy_list.append(proxy)
+                logging.info('可用代理数量 {}'.format(len(available_proxy_list)))
+        except Exception:
+            pass
+    return available_proxy_list

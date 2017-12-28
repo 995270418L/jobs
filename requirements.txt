@@ -1,0 +1,10 @@
+# all require dependency file
+
+requests
+lxml
+mysqlclient
+python-redis
+redis
+retrying
+beautifulsoup4
+sqlalchemy
