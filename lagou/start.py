@@ -18,12 +18,12 @@ def main():
             url = url.decode('utf8')
         if url:
             start = time.time()
-            print("正在爬取url: {},开始时间:{}".format(url,start))
+            logger.info("正在爬取url: {},开始时间:{}".format(url,start))
             company.distribute(url)
             end = time.time()
-            print("爬取任务结束，共耗时:{}".format(end-start))
+            logger.info("爬取任务结束，共耗时:{}".format(end-start))
         else:
-            print('任务已经完成。再见！')
+            logger.info('任务已经完成。再见！')
             break
 
 def distribute_lagou():

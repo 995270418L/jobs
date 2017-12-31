@@ -55,8 +55,8 @@ def update_company_data(city_id, finance_stage_id, industry_id):
         # asyncio_crawler(companys)
         for company in companys:
             company_id = int(company['companyId'])
-            if CompanyModel.count(id=company_id) == 0:
-                generate_company_data(company=company,city_id=city_id)
+            # if CompanyModel.count(id=company_id) == 0:
+            generate_company_data(company=company,city_id=city_id)
     logger.info('爬取城市={}, 融资类型={}, 行业类别={}, 任务结束'.format(city_id, finance_stage_id, industry_id))
 # def asyncio_crawler(companys):
 #     loop = asyncio.get_event_loop()

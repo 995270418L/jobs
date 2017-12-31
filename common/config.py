@@ -73,12 +73,12 @@ LOGGING_CONFIG = {
     "loggers": {
         'lagou.tasks':{
             "level": "INFO",
-            "handlers": ['file'],
+            "handlers": ['console'],
             "propagate":'no'
         },
         'lagou.utils':{
             "level": "INFO",
-            "handlers": ['file'],
+            "handlers": ['console'],
             "propagate":'no'
         },
         '' : {

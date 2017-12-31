@@ -31,8 +31,8 @@ def update_job_data(company_id,isSchool):
         jobs = json_result['content']['data']['page']['result']
         for job in jobs:
             job_id = job['positionId']
-            if JobModel.count(job_id=int(job_id)) == 0:
-                generate_job_data(job, company_id)
+            # if JobModel.count(job_id=int(job_id)) == 0:
+            generate_job_data(job, company_id)
 
 def generate_job_data(job, company_id):
     """生成职位数据"""
