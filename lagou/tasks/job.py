@@ -3,20 +3,19 @@ import logging
 import uuid
 from json import JSONDecodeError
 from math import ceil
-import logging
 import requests
 from bs4 import BeautifulSoup
-from requests.exceptions import RequestException
-from lagou.common_s import constants as constants_s
 from common import constants
-from lagou.utils.cookies import Cookies
-from lagou.utils.http_tools import generate_http_header,filter_http_tag
-from common.util import crawl_sleep
 from common.exceptions import RequestsError
+from common.util import crawl_sleep
+from lagou.common_s import constants as constants_s
 from lagou.domain.CityModel import CityModel
 from lagou.domain.JobModel import JobModel
 from lagou.domain.JobTagModel import JobTagModel
 from lagou.domain.JobTagRModel import JobTagRModel
+from lagou.utils.cookies import Cookies
+from lagou.utils.http_tools import generate_http_header, filter_http_tag
+
 logger = logging.getLogger(__name__)
 # 根据公司id获取所有工作
 def update_job_data(company_id,isSchool):

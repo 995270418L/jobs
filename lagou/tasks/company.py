@@ -43,14 +43,14 @@ def update_company_data(city_id, finance_stage_id, industry_id):
     # 计算需要爬取的页数
     page_count = int(ceil(int(response['totalCount']) / int(response['pageSize'])))
     if page_count == 0:
-        logging.error("地址为: " + url + " 的页面获取不到数据了，请注意检查代码配置")
+        logger.error("地址为: " + url + " 的页面获取不到数据了，请注意检查代码配置")
         return
     for page_no in range(1, page_count + 1):
         logger.info('正在爬取城市={}, 融资类型={}, 行业类别={}, 第 「{}」 页'.format(city_id, finance_stage_id, industry_id, page_no))
         response = request_company_json(url=url, page_no=page_no)
         companys = response['result']
         if len(companys) == 0:
-            logging.info('json数据返回为空，所在位置: company.py -> update_company_data')
+            logger.info('json数据返回为空，所在位置: company.py -> update_company_data')
             continue
         # asyncio_crawler(companys)
         for company in companys:
@@ -86,10 +86,10 @@ def request_company_json(url, page_no):
             Cookies.remove_cookies(cookies)
             return request_company_json(url,page_no)
     except JSONDecodeError as e:
-        logging.error(e)
+        logger.error(e)
         return request_company_json(url,page_no)
     except ConnectionError as e :
-        logging.error("建立连接失败，请检查网络情况,异常信息: {}".format(e))
+        logger.error("建立连接失败，url:{0},请检查网络情况,异常信息: {1}".format(url,e))
     return response_json
 
 def generate_company_data(company, city_id):
@@ -144,7 +144,7 @@ def generate_company_data(company, city_id):
 def requests_company_detail_data(company_id):
     """请求公司详情页数据"""
     url = constants_s.COMPANY_DETAIL_URL.format(company_id=company_id)
-    logging.info("正在请求公司详情页数据,url: {}".format(url))
+    logger.info("正在请求公司详情页数据,url: {}".format(url))
     headers = generate_http_header()
     crawl_sleep()
     try:

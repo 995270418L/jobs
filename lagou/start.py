@@ -72,4 +72,4 @@ def test():
     loop.run_until_complete(asyncio.wait(tasks)) # 执行任务
     loop.close()
 if __name__ == '__main__':
-    main()
+    distribute_lagou()

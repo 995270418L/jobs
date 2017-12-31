@@ -65,7 +65,7 @@ LOGGING_CONFIG = {
             'credentials': ('XYPFDWY', 'steve123')
         },
         'memoryHandler':{
-            'capacity': 5,
+            'capacity': 1000,
             'target':'smtp',
             'class':'common.OptmizedMemoryHandler.OptmizedMemoryHandler'
         }
@@ -83,7 +83,7 @@ LOGGING_CONFIG = {
         },
         '' : {
             "level": 'ERROR',
-            'handlers': ['smtp','memoryHandler'],
+            'handlers': ['memoryHandler'],
             "propagate": 'no'
         }
     },
