@@ -11,14 +11,14 @@ DB_CONF = {
     "host" : "mysql+mysqldb://{username}:{password}@{ipaddress}:{port}/job?charset=utf8mb4".format(
         username=DB_USERNAME,
         password=DB_PASSWORD,
-        ipaddress="localhost",
+        ipaddress="10.0.0.2",
         port=3306
     )
 }
 
 # REDIS 配置
 REDIS_CONF = {
-    "host" : "localhost",
+    "host" : "10.0.0.2",
     "port" : 6379,
     "db" : 0
 }
@@ -73,12 +73,12 @@ LOGGING_CONFIG = {
     "loggers": {
         'lagou.tasks':{
             "level": "INFO",
-            "handlers": ['console'],
+            "handlers": ['file'],
             "propagate":'no'
         },
         'lagou.utils':{
             "level": "INFO",
-            "handlers": ['console'],
+            "handlers": ['file'],
             "propagate":'no'
         },
         '' : {
