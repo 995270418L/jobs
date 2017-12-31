@@ -3,7 +3,6 @@
     拉勾相关网页
 """
 FINANCE_STAGE_DICT = {
-    'unknown': 0,
     '未融资': 1,
     '天使轮': 2,
     'A轮': 3,
@@ -12,8 +11,28 @@ FINANCE_STAGE_DICT = {
     'D轮及以上': 6,
     '上市公司': 7,
     '不需要融资': 8,
-    '成长型(不需要融资)': 9,
-    '初创型(不需要融资)': 10
+}
+
+INDUSTRY_FIELD = {
+    "移动互联网":24,
+    '电子商务':25,
+    '金融':33,
+    '企业服务':27,
+    '教育':29,
+    '文化娱乐':45,
+    '游戏':31,
+    'O2O':28,
+    '硬件':47,
+    '医疗健康':34,
+    '生活服务':35,
+    '广告营销':43,
+    '旅游':32,
+    '数据服务':41,
+    '社交网络':26,
+    '分类信息':48,
+    '信息安全':38,
+    '招聘':49,
+    '其他':10594
 }
 
 """
@@ -53,6 +72,17 @@ HTTP_HEADER = {
     'Upgrade-Insecure-Requests': '1',
 }
 
+WORK_YEARS_REQUEST_DICT = {
+    'unknown': 0,
+    '1-3年': 1,
+    '10年以上': 2,
+    '3-5年': 3,
+    '5-10年': 4,
+    '不限': 5,
+    '应届毕业生': 6,
+    '1年以下': 7,
+}
+
 PROJECT = '拉勾'
 
 # 获取详细职位id信息的json请求地址
@@ -72,3 +102,5 @@ CITY_COMPANY_URL = 'https://www.lagou.com/gongsi/{0}-{1}-{2}.json'
 
 # 公司-职位对应地址
 COMPANY_JOB_URL = 'https://www.lagou.com/gongsi/searchPosition.json'
+
+DIS_QUEUE = 'steve:lagou'

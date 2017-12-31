@@ -1,17 +1,20 @@
 # 城市Model
 
-from common.db import BaseModel
 import uuid
-from sqlalchemy import Column
-from sqlalchemy.dialects.mysql import VARCHAR,INTEGER
+
+from sqlalchemy import Column, String
+
+from common.db import BaseModel
+
 
 class CityModel(BaseModel):
+
     __tablename__ = 'city'
 
-    id = Column(VARCHAR(36),primary_key=True,doc="UUID生成主键")
-    city_name = Column(VARCHAR(50),nullable=False,doc='城市名')
-    city_id = Column(INTEGER,nullable= False, doc="城市id")
-    city_source = Column(VARCHAR(10),nullable=False,doc="平台信息来源")
+    id = Column(String(50), primary_key=True)
+    city_name = Column(String(30), nullable=False)
+    city_id = Column(String(50))
+    city_source = Column(String(50))
 
     @classmethod
     def add(cls,city_id,city_name,id=uuid.uuid1(),source = "拉勾"):
@@ -23,3 +26,11 @@ class CityModel(BaseModel):
     def add_all(cls,cities):
         cls.session.add_all(cities)
         cls.session.flush()
+
+    @classmethod
+    def get_city_id_by_name(cls,name):
+        return cls.session.query(cls).filter(cls.city_name==name,cls.city_source=='拉勾').one_or_none()
+
+    @classmethod
+    def gat_all(cls):
+        return cls.session.query(cls).all()

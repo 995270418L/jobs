@@ -1,12 +1,19 @@
 import requests
+import random
 from common import constants
+from common.db import redis_instance
 
 # 获取多个代理ip
 def get_proxy():
-    return requests.get("http://127.0.0.1:5051/get/").content
+    key = redis_instance.hgetall(name=constants.REDIS_NAME)
+    rkey = random.choice(list(key.keys())) if key else None
+    if isinstance(rkey, bytes):
+        return rkey.decode('utf-8')
+    else:
+        return rkey
 
 def delete_proxy(proxy):
-    requests.get("http://127.0.0.1:5051/delete/?proxy={}".format(proxy))
+    redis_instance.hdel('proxy',proxy)
 
 # your spider code
 def getHtml(url):
@@ -22,3 +29,10 @@ def getHtml(url):
     # 出错5次, 删除代理池中代理
     delete_proxy(proxy)
     return None
+
+# def main():
+#     # redis_instance.hset('steve','lxh','123')
+#     key = redis_instance.hgetall('useful_proxy')
+#     print(key)
+# if __name__ == '__main__':
+#     main()

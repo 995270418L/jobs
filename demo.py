@@ -12,4 +12,3 @@ for tag in tags:
     city_name = ''.join(tag.stripped_strings)
     city_id = tag['href']
     city_id = re.findall(pattern = r'/(\d+)-\d+-\d+$',string=city_id)[0]
-    
