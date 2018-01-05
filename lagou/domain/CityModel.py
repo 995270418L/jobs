@@ -29,7 +29,12 @@ class CityModel(BaseModel):
 
     @classmethod
     def get_city_id_by_name(cls,name):
-        return cls.session.query(cls).filter(cls.city_name==name,cls.city_source=='拉勾').one_or_none()
+        if name:
+            result = cls.session.query(cls).filter(cls.city_name==name,cls.city_source=='拉勾').one_or_none()
+            if result:
+                return result.city_id
+        else:
+            return None
 
     @classmethod
     def gat_all(cls):

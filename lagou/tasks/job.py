@@ -15,10 +15,12 @@ from lagou.domain.JobTagModel import JobTagModel
 from lagou.domain.JobTagRModel import JobTagRModel
 from lagou.utils.cookies import Cookies
 from lagou.utils.http_tools import generate_http_header, filter_http_tag
+from concurrent.futures import ThreadPoolExecutor
 
 logger = logging.getLogger(__name__)
 # 根据公司id获取所有工作
 def update_job_data(company_id,isSchool):
+    pool = ThreadPoolExecutor(10)
     """更新职位数据"""
     logger.info("正在获取公司id为:{0}的{1}工作信息".format(company_id, "学校招聘" if isSchool else "社会招聘"))
     response = request_job_json(company_id=company_id, page_no=1)
@@ -31,14 +33,16 @@ def update_job_data(company_id,isSchool):
         for job in jobs:
             job_id = job['positionId']
             # if JobModel.count(job_id=int(job_id)) == 0:
-            generate_job_data(job, company_id)
+            pool.submit(generate_job_data(job, company_id))
 
 def generate_job_data(job, company_id):
     """生成职位数据"""
     id = str(uuid.uuid1())
     job_attract, job_descr, tags,job_site = requests_job_detail_data(job['positionId'])
     job_id = job['positionId']
-    job_place_id = 0 if 'city' not in job else CityModel.get_city_id_by_name(job['city']).city_id
+    job_place_id =  CityModel.get_city_id_by_name(job['city'])
+    if job_place_id is None:
+        job_place_id = 0
     job_name = job['positionName']
     job_exper = filter_http_tag(job['workYear'])
     job_salary = job['salary']
@@ -71,7 +75,7 @@ def requests_job_detail_data(job_id):
             Cookies.refresh_cookies()
             return requests_job_detail_data(job_id)
     except Exception as e:
-        logger.error('请求url:{0} 失败，响应码: {1},异常信息:{2},检查对应服务器是否能正常上网.'.format(url,response.status_code,e))
+        logger.error('请求url:{0} 失败,异常信息:{1},检查对应服务器是否能正常上网.'.format(url,e))
         raise RequestsError
     html = BeautifulSoup(response.text,'lxml')
     try:
@@ -116,6 +120,6 @@ def request_job_json(company_id, page_no,isSchool=False):
         logger.warning("json数据解析失败，请检查地址是否失效，错误信息:{}".format(e))
         return request_job_json(company_id,page_no,isSchool)
     except Exception as e :
-        logger.error('请求url:{0} 失败，响应码: {1},异常信息:{2},检查对应服务器是否能正常上网.'.format(constants_s.COMPANY_JOB_URL,response_data.status_code,e))
+        logger.error('请求url:{0} 失败异常信息:{1},检查对应服务器是否能正常上网.'.format(constants_s.COMPANY_JOB_URL,e))
         raise RequestsError
     return response_json

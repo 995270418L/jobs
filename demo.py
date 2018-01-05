@@ -1,14 +1,13 @@
 import requests
-import re
-from bs4 import BeautifulSoup
+import time
+import threading
 
 url = 'https://www.lagou.com/gongsi/allCity.html?option=0-0-0'
+# 测试接口的响应速度
+def request():
+    start = time.time()
+    requests.get("http://10.0.0.2:1024/company/one?name=steve&age=10&sex=true").text
+    print("响应时间: {} ms".format((time.time() - start)))
 
-text = requests.get(url).text
-html = BeautifulSoup(text,'lxml')
-tags = html.select('.city_list a')
-for tag in tags:
-    print(tag)
-    city_name = ''.join(tag.stripped_strings)
-    city_id = tag['href']
-    city_id = re.findall(pattern = r'/(\d+)-\d+-\d+$',string=city_id)[0]
+for i in range(1,1000):
+    request()

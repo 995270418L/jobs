@@ -8,7 +8,6 @@ from math import ceil
 from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
-import asyncio
 from common import constants
 from common.exceptions import RequestsError
 from common.util import crawl_sleep
@@ -22,6 +21,8 @@ from lagou.utils.cookies import Cookies
 from lagou.utils.http_tools import generate_http_header, filter_http_tag
 from lagou.tasks import job
 
+from concurrent.futures import ThreadPoolExecutor
+
 logger = logging.getLogger(__name__)
 
 def distribute(url):
@@ -34,8 +35,9 @@ def distribute(url):
     else:
         logger.warning('url格式错误:{}'.format(url))
 
-# 按照城市来更新公司数据
+# 按照城市id来更新公司数据
 def update_company_data(city_id, finance_stage_id, industry_id):
+    pool = ThreadPoolExecutor(10)
     # 先清空表
     #CompanyModel.delete_all()
     url = constants_s.CITY_COMPANY_URL.format(city_id,finance_stage_id,industry_id)
@@ -56,13 +58,8 @@ def update_company_data(city_id, finance_stage_id, industry_id):
         for company in companys:
             company_id = int(company['companyId'])
             # if CompanyModel.count(id=company_id) == 0:
-            generate_company_data(company=company,city_id=city_id)
+            pool.submit(generate_company_data(company=company,city_id=city_id))
     logger.info('爬取城市={}, 融资类型={}, 行业类别={}, 任务结束'.format(city_id, finance_stage_id, industry_id))
-# def asyncio_crawler(companys):
-#     loop = asyncio.get_event_loop()
-#     tasks = [generate_company_data(company=company, city_id=company['companyId']) for company in companys]
-#     loop.run_until_complete(asyncio.wait(tasks))
-#     loop.close()
 
 def request_company_json(url, page_no):
     prams = {
@@ -109,7 +106,7 @@ def generate_company_data(company, city_id):
     company_m =CompanyModel(id=id,com_id=str(com_id),com_name=com_name,com_process=finance_stage,com_number=com_number,com_city_id=city_id,
                           com_num_school=com_school_num,com_num_social=com_social_num,com_site=com_site,com_source='拉勾',com_fullname=com_fullname,
                           com_address=address,com_info=introduce,com_record_time=com_record_time,com_resume_rate=com_resume_rate)
-    # 公司表插入 异步IO实现
+    # 公司表插入
     CompanyModel.add(company_m)
     # 公司标签R 表插入
     com_tag_rs = []
@@ -160,7 +157,8 @@ def requests_company_detail_data(company_id):
             Cookies.remove_cookies(cookies)
             return requests_company_detail_data(company_id)
     except Exception as e:
-        logger.error('请求url:{0} 失败，响应码: {1},异常信息:{2},检查对应服务器是否能正常上网.'.format(url,response.status_code,e))
+        logger.error('请求url:{0} 失败,异常信息:{1},检查对应服务器是否能正常上网.'.format(url,e))
+
         raise RequestsError
     html = BeautifulSoup(response.text,'lxml')
     com_tags = html.select('#tags_container li')

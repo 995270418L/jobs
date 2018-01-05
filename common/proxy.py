@@ -13,7 +13,7 @@ def get_proxy():
         return rkey
 
 def delete_proxy(proxy):
-    redis_instance.hdel('proxy',proxy)
+    redis_instance.hdel(constants.REDIS_NAME,proxy)
 
 # your spider code
 def getHtml(url):

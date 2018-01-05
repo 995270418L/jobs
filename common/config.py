@@ -4,7 +4,11 @@ import os
 DB_USERNAME = os.environ.get("MYSQL_USERNAME","root")
 DB_PASSWORD = os.environ.get("MYSQL_PASSWORD","shiyue")
 SMTP_HOST = 'smtp.163.com'
-SMTP_PORT = '25'
+SMTP_PORT = 25
+MAIL_FROM = 'xypfdwy@163.COM'
+MAIL_TO = '995270418@qq.com'
+AUTH_USER = 'XYPFDWY'
+AUTH_PASSWD = 'steve123'
 
 # MYSQL 配置
 DB_CONF = {
@@ -73,17 +77,17 @@ LOGGING_CONFIG = {
     "loggers": {
         'lagou.tasks':{
             "level": "INFO",
-            "handlers": ['file'],
+            "handlers": ['console'],
             "propagate":'no'
         },
         'lagou.utils':{
             "level": "INFO",
-            "handlers": ['file'],
+            "handlers": ['console'],
             "propagate":'no'
         },
         '' : {
             "level": 'ERROR',
-            'handlers': ['memoryHandler'],
+            'handlers': ['console'],
             "propagate": 'no'
         }
     },
