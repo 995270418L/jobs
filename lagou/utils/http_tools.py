@@ -21,7 +21,7 @@ def generate_http_header(is_crawl_jobs_count=False):
     """构造 HTTP 请求头"""
     header = constants_s.HTTP_HEADER
     header['User-Agent'] = random.choice(constants.USER_AGENT_LIST)
-    # lagou 会针对访问的不同链接 检测header 的referer
+    # lagou 会针对访问的不同链接 检测header的referer
     if is_crawl_jobs_count:
         header['Referer'] = 'https://www.lagou.com/jobs/list_python?labelWords=&fromSearch=true&suginput='
     return header

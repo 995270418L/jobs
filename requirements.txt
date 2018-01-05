@@ -5,6 +5,5 @@ lxml
 mysqlclient
 python-redis
 redis
-retrying
 beautifulsoup4
 sqlalchemy

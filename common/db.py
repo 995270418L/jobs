@@ -1,11 +1,12 @@
 
 from common import config
-from sqlalchemy import create_engine,MetaData
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import redis
 
 # 创建连接池
-engine = create_engine(config.DB_CONF['host'], echo=True, pool_recycle=3600)
+engine = create_engine(config.DB_CONF['host'], pool_recycle=3600)
 # orm映射对象的基类
 _BaseModel = declarative_base()
 # 操作数据库表的对象session
@@ -20,4 +21,8 @@ class BaseModel(_BaseModel):
         'extend_existing': True,
     }
     session = _Session()
+
+redis_pool = redis.ConnectionPool(host=config.REDIS_CONF['host'],port=config.REDIS_CONF['port'])
+redis_instance = redis.Redis(connection_pool=redis_pool)
+
 
